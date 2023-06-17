@@ -11,6 +11,8 @@ def ensure_dir(dirname):
     if not dirname.is_dir():
         dirname.mkdir(parents=True, exist_ok=False)
 
+
+# json -> ordered dict
 def read_json(fname):
     fname = Path(fname)
     with fname.open('rt') as handle:

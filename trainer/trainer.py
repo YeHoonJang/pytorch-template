@@ -37,17 +37,22 @@ class Trainer(BaseTrainer):
         :param epoch: Integer, current training epoch.
         :return: A log that contains average loss and metric in this epoch.
         """
+
+        # BaseTrainer 를 상속받음
         self.model.train()
         self.train_metrics.reset()
         for batch_idx, (data, target) in enumerate(self.data_loader):
+            # data load
             data, target = data.to(self.device), target.to(self.device)
 
-            self.optimizer.zero_grad()
-            output = self.model(data)
-            loss = self.criterion(output, target)
-            loss.backward()
-            self.optimizer.step()
+            # 학습
+            self.optimizer.zero_grad()  # gradient 초기화
+            output = self.model(data)   # model run
+            loss = self.criterion(output, target)  # loss
+            loss.backward()  # backprop
+            self.optimizer.step()  # gradient update
 
+            # logging 및 save code
             self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
             self.train_metrics.update('loss', loss.item())
             for met in self.metric_ftns:
