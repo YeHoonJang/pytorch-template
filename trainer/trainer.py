@@ -4,6 +4,8 @@ from torchvision.utils import make_grid
 from base import BaseTrainer
 from utils import inf_loop, MetricTracker
 
+import wandb
+
 
 class Trainer(BaseTrainer):
     """
@@ -55,6 +57,10 @@ class Trainer(BaseTrainer):
             # logging 및 save code
             self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
             self.train_metrics.update('loss', loss.item())
+
+            # wandb에 loss 업데이트
+            wandb.log({"loss": loss})
+
             for met in self.metric_ftns:
                 self.train_metrics.update(met.__name__, met(output, target))
 
